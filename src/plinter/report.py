@@ -88,7 +88,7 @@ def format_comparison(comparison: Comparison) -> str:
         f"**Shared binding-site residues ({len(comparison.shared_residues)}):** "
         + ", ".join(sorted(comparison.shared_residues)),
         "",
-        f"**Shared hydrogen-bond partners:** "
+        "**Shared hydrogen-bond partners:** "
         + (", ".join(sorted(comparison.shared_hbond_residues)) or "none"),
         "",
         f"**Unique to {first.ligand} ({first.pdb_id}):** "
