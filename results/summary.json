@@ -1,0 +1,61 @@
+{
+  "per_ligand": [
+    {
+      "pdb_id": "1HFR",
+      "ligand": "MOT",
+      "ligand_atoms_in_contact": 32,
+      "contacts": 330,
+      "residues_contacted": 21,
+      "hydrogen_bonds": 10,
+      "salt_bridges": 7,
+      "hydrophobic_contacts": 66,
+      "shortest_contact_A": 2.25
+    },
+    {
+      "pdb_id": "1KMV",
+      "ligand": "LII",
+      "ligand_atoms_in_contact": 25,
+      "contacts": 274,
+      "residues_contacted": 18,
+      "hydrogen_bonds": 4,
+      "salt_bridges": 2,
+      "hydrophobic_contacts": 74,
+      "shortest_contact_A": 2.77
+    }
+  ],
+  "comparison": {
+    "shared_residues": [
+      "ALA9",
+      "ASN64",
+      "GLU30",
+      "ILE60",
+      "ILE7",
+      "LEU22",
+      "LEU67",
+      "PHE31",
+      "PHE34",
+      "PRO61",
+      "SER59",
+      "THR136",
+      "THR56",
+      "TYR121",
+      "TYR33",
+      "VAL115",
+      "VAL8"
+    ],
+    "shared_hydrogen_bond_residues": [
+      "GLU30",
+      "ILE7",
+      "VAL115"
+    ],
+    "unique_to_MOT": [
+      "ARG32",
+      "ARG70",
+      "GLN35",
+      "LYS68"
+    ],
+    "unique_to_LII": [
+      "GLY116"
+    ]
+  }
+}
