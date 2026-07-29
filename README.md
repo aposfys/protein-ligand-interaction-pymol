@@ -70,16 +70,14 @@ python -m plinter.cli --keep-cofactor    # include NADPH in the environment
 
 5. **Compare** the two fingerprints: shared residues, shared hydrogen-bond partners, and residues unique to each ligand.
 
-### Refinements over the original coursework version
+### Design decisions
 
-This repository reworks an MSc assignment ([original Greek report](docs/original-report-gr.pdf), [original script](docs/original-pymol-script.py)). Four changes were made:
+Four choices in this pipeline are worth stating explicitly, because each is a place where a contact analysis can quietly go wrong:
 
-- **Cryoprotectants excluded.** The original counted DMSO (`DMS 203`) as a binding-site partner of LII, including it among the reported "protein atoms". DMSO is a cryoprotectant, not part of the protein, so those contacts were spurious. All standard crystallisation additives are now filtered out.
-- **O(n log n) instead of O(n×m).** The original called `cmd.get_distance` inside a nested loop over every ligand × environment atom pair. A KD-tree neighbour search gives identical distances and turns a minutes-long run into a sub-second one — and removes the dependency on a running PyMOL session for the numerical analysis.
-- **Interaction typing beyond "H-bond yes/no".** Salt bridges are separated from neutral hydrogen bonds, and hydrophobic contacts are identified explicitly, which is what distinguishes the two binding modes.
-- **Reproducibility.** Structures are fetched from RCSB on demand, results are written as machine-readable CSV/JSON rather than pasted into a spreadsheet, and 11 tests assert the invariants (cutoffs respected, cofactor and solvent excluded, Glu30 anchoring recovered in both complexes).
-
-Distances agree with the original report to 0.01 Å for every contact both methods report.
+- **Crystallisation additives are excluded from the binding site.** 1KMV contains DMSO (`DMS 203`) within 3 Å of LII. DMSO is a cryoprotectant, not part of the protein, and counting it as a binding-site partner invents an interaction that does not exist in solution. Waters, buffer ions and the standard cryoprotectants are all filtered out by default; `CRYSTALLISATION_ADDITIVES` in [`contacts.py`](src/plinter/contacts.py) lists them.
+- **KD-tree neighbour search, not a nested loop.** Testing every ligand × environment atom pair is O(n×m) and, through PyMOL's `cmd.get_distance`, slow enough to be measured in minutes. `Bio.PDB.NeighborSearch` gives identical distances in under a second and removes the dependency on a running PyMOL session for the numerical work — PyMOL is then used for what it is best at, which is rendering.
+- **Interaction typing beyond "hydrogen bond: yes/no".** Salt bridges are separated from neutral hydrogen bonds and hydrophobic contacts are identified explicitly. This is what makes the two binding modes distinguishable: MOT's advantage is a charged network, LII's is shape complementarity, and a boolean H-bond flag cannot express that.
+- **Everything regenerates from source.** Structures are fetched from RCSB on demand, results are written as machine-readable CSV/JSON, and 11 tests assert the invariants — cutoffs respected, cofactor and solvent excluded, and the conserved Glu30 anchor recovered in both complexes.
 
 ## Repository layout
 
@@ -95,7 +93,6 @@ pymol/
   render_binding_sites.py   Headless PyMOL figure rendering
 tests/            pytest suite
 results/          Generated tables and figures
-docs/             Original coursework report and script
 ```
 
 ## Output files
