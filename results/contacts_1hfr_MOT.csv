@@ -1,0 +1,331 @@
+ligand_atom,ligand_element,residue,residue_name,residue_seq,chain,protein_atom,protein_element,distance,interaction,hydrogen_bond
+O2,O,ARG70,ARG,70,A,NH2,N,2.25,salt bridge,True
+N1,N,GLU30,GLU,30,A,OE1,O,2.73,salt bridge,True
+NA2,N,GLU30,GLU,30,A,OE2,O,2.82,salt bridge,True
+O,O,ASN64,ASN,64,A,ND2,N,2.88,hydrogen bond,True
+O1,O,ARG70,ARG,70,A,NH1,N,2.89,salt bridge,True
+OE1,O,PHE31,PHE,31,A,CB,C,3.09,van der Waals,False
+NA4,N,ILE7,ILE,7,A,O,O,3.13,hydrogen bond,True
+CT,C,ARG70,ARG,70,A,NH2,N,3.15,van der Waals,False
+O2,O,ARG70,ARG,70,A,CZ,C,3.18,van der Waals,False
+O1,O,ARG70,ARG,70,A,NH2,N,3.3,salt bridge,True
+N1,N,GLU30,GLU,30,A,OE2,O,3.34,salt bridge,True
+CG,C,GLN35,GLN,35,A,NE2,N,3.35,van der Waals,False
+O1,O,PHE34,PHE,34,A,CE1,C,3.36,van der Waals,False
+NA4,N,VAL115,VAL,115,A,O,O,3.4,hydrogen bond,True
+O1,O,ARG70,ARG,70,A,CZ,C,3.43,van der Waals,False
+CM,C,SER59,SER,59,A,OG,O,3.45,van der Waals,False
+O2,O,ARG70,ARG,70,A,NH1,N,3.49,salt bridge,True
+C4,C,PHE34,PHE,34,A,CD2,C,3.5,hydrophobic,False
+O1,O,PHE34,PHE,34,A,CD1,C,3.5,van der Waals,False
+N1,N,GLU30,GLU,30,A,CD,C,3.52,van der Waals,False
+N3,N,PHE34,PHE,34,A,CD2,C,3.56,van der Waals,False
+NA2,N,THR136,THR,136,A,OG1,O,3.57,van der Waals,False
+C2,C,GLU30,GLU,30,A,OE2,O,3.58,van der Waals,False
+C8A,C,GLU30,GLU,30,A,OE1,O,3.6,van der Waals,False
+O8,O,GLU30,GLU,30,A,OE1,O,3.62,van der Waals,False
+N,N,LEU67,LEU,67,A,CD2,C,3.62,van der Waals,False
+CT,C,ARG70,ARG,70,A,NH1,N,3.62,van der Waals,False
+N3,N,VAL8,VAL,8,A,CA,C,3.63,van der Waals,False
+CM,C,LEU22,LEU,22,A,CD2,C,3.65,hydrophobic,False
+OE1,O,PHE31,PHE,31,A,CG,C,3.66,van der Waals,False
+N1,N,ALA9,ALA,9,A,CB,C,3.67,van der Waals,False
+O,O,ASN64,ASN,64,A,CG,C,3.67,van der Waals,False
+O1,O,LEU67,LEU,67,A,CD2,C,3.67,van der Waals,False
+C2,C,GLU30,GLU,30,A,OE1,O,3.68,van der Waals,False
+NA2,N,GLU30,GLU,30,A,OE1,O,3.68,van der Waals,False
+N3,N,VAL8,VAL,8,A,N,N,3.68,van der Waals,False
+O1,O,GLN35,GLN,35,A,CB,C,3.68,van der Waals,False
+NA4,N,ILE7,ILE,7,A,C,C,3.69,van der Waals,False
+NA2,N,GLU30,GLU,30,A,CD,C,3.7,van der Waals,False
+C4A,C,PHE34,PHE,34,A,CD2,C,3.7,hydrophobic,False
+C12,C,PHE34,PHE,34,A,CE1,C,3.7,hydrophobic,False
+NA2,N,VAL8,VAL,8,A,O,O,3.73,van der Waals,False
+NA4,N,TYR121,TYR,121,A,OH,O,3.73,van der Waals,False
+NA2,N,VAL8,VAL,8,A,C,C,3.74,van der Waals,False
+O,O,ASN64,ASN,64,A,CB,C,3.74,van der Waals,False
+CT,C,ARG70,ARG,70,A,CZ,C,3.74,hydrophobic,False
+NA4,N,PHE34,PHE,34,A,CE2,C,3.76,van der Waals,False
+C7,C,PHE31,PHE,31,A,CE1,C,3.76,hydrophobic,False
+N3,N,VAL8,VAL,8,A,C,C,3.77,van der Waals,False
+N3,N,ILE7,ILE,7,A,C,C,3.79,van der Waals,False
+CD,C,GLN35,GLN,35,A,NE2,N,3.79,van der Waals,False
+C2,C,PHE34,PHE,34,A,CD2,C,3.8,hydrophobic,False
+N3,N,ALA9,ALA,9,A,N,N,3.8,van der Waals,False
+C4,C,PHE34,PHE,34,A,CE2,C,3.8,hydrophobic,False
+CT,C,LEU67,LEU,67,A,CD2,C,3.81,hydrophobic,False
+OE2,O,GLN35,GLN,35,A,NE2,N,3.81,van der Waals,False
+C2,C,ALA9,ALA,9,A,CB,C,3.84,hydrophobic,False
+C2,C,ALA9,ALA,9,A,N,N,3.85,van der Waals,False
+C16,C,PHE31,PHE,31,A,CE1,C,3.86,hydrophobic,False
+O8,O,PHE31,PHE,31,A,CE1,C,3.88,van der Waals,False
+NA4,N,PHE34,PHE,34,A,CD2,C,3.89,van der Waals,False
+NA2,N,ALA9,ALA,9,A,CB,C,3.91,van der Waals,False
+NA2,N,ALA9,ALA,9,A,N,N,3.91,van der Waals,False
+NA2,N,ILE7,ILE,7,A,CG1,C,3.91,van der Waals,False
+N3,N,ILE7,ILE,7,A,O,O,3.92,van der Waals,False
+C15,C,ILE60,ILE,60,A,CG1,C,3.92,hydrophobic,False
+O2,O,GLN35,GLN,35,A,CB,C,3.92,van der Waals,False
+O2,O,GLN35,GLN,35,A,CG,C,3.93,van der Waals,False
+C2,C,VAL8,VAL,8,A,C,C,3.94,hydrophobic,False
+CT,C,GLN35,GLN,35,A,CB,C,3.97,hydrophobic,False
+C16,C,ILE60,ILE,60,A,CG1,C,3.98,hydrophobic,False
+C,C,LEU67,LEU,67,A,CD2,C,3.98,hydrophobic,False
+N1,N,PHE34,PHE,34,A,CB,C,4.0,van der Waals,False
+C13,C,PHE34,PHE,34,A,CE1,C,4.0,hydrophobic,False
+O2,O,GLN35,GLN,35,A,CD,C,4.01,van der Waals,False
+NA4,N,VAL8,VAL,8,A,CA,C,4.02,van der Waals,False
+C15,C,PHE31,PHE,31,A,CE1,C,4.02,hydrophobic,False
+CA,C,LEU67,LEU,67,A,CD2,C,4.02,hydrophobic,False
+C8A,C,PHE34,PHE,34,A,CD2,C,4.03,hydrophobic,False
+C11,C,PHE31,PHE,31,A,CE1,C,4.03,hydrophobic,False
+C12,C,PHE34,PHE,34,A,CD1,C,4.03,hydrophobic,False
+C13,C,PHE34,PHE,34,A,CZ,C,4.03,hydrophobic,False
+CD,C,PHE31,PHE,31,A,CB,C,4.04,hydrophobic,False
+C,C,ASN64,ASN,64,A,ND2,N,4.05,van der Waals,False
+C4,C,ILE7,ILE,7,A,O,O,4.07,van der Waals,False
+O,O,ILE60,ILE,60,A,CG2,C,4.07,van der Waals,False
+NA4,N,VAL8,VAL,8,A,N,N,4.08,van der Waals,False
+C4A,C,PHE34,PHE,34,A,CE2,C,4.08,hydrophobic,False
+C7,C,LEU22,LEU,22,A,CD2,C,4.08,hydrophobic,False
+O1,O,GLN35,GLN,35,A,CA,C,4.08,van der Waals,False
+N3,N,ILE7,ILE,7,A,CG1,C,4.1,van der Waals,False
+N1,N,PHE34,PHE,34,A,CD2,C,4.13,van der Waals,False
+C2,C,PHE34,PHE,34,A,CB,C,4.13,hydrophobic,False
+C16,C,ILE60,ILE,60,A,CG2,C,4.13,hydrophobic,False
+C2,C,GLU30,GLU,30,A,CD,C,4.14,hydrophobic,False
+NA4,N,ILE7,ILE,7,A,CG2,C,4.14,van der Waals,False
+C7,C,LEU22,LEU,22,A,CD1,C,4.14,hydrophobic,False
+CG,C,GLN35,GLN,35,A,CD,C,4.15,hydrophobic,False
+NA4,N,VAL115,VAL,115,A,CB,C,4.16,van der Waals,False
+CA,C,ASN64,ASN,64,A,ND2,N,4.16,van der Waals,False
+C12,C,PHE34,PHE,34,A,CZ,C,4.17,hydrophobic,False
+C16,C,ILE60,ILE,60,A,CA,C,4.17,hydrophobic,False
+C16,C,PRO61,PRO,61,A,CD,C,4.18,hydrophobic,False
+NA4,N,VAL115,VAL,115,A,CA,C,4.19,van der Waals,False
+N3,N,PHE34,PHE,34,A,CE2,C,4.2,van der Waals,False
+C4,C,VAL8,VAL,8,A,CA,C,4.2,hydrophobic,False
+NA4,N,VAL115,VAL,115,A,C,C,4.2,van der Waals,False
+O8,O,PHE31,PHE,31,A,CD1,C,4.2,van der Waals,False
+OE1,O,PHE31,PHE,31,A,CD1,C,4.2,van der Waals,False
+C11,C,PHE31,PHE,31,A,CD1,C,4.21,hydrophobic,False
+C12,C,LEU67,LEU,67,A,CD2,C,4.21,hydrophobic,False
+C14,C,ILE60,ILE,60,A,CG1,C,4.21,hydrophobic,False
+C16,C,ILE60,ILE,60,A,CB,C,4.22,hydrophobic,False
+NA2,N,VAL8,VAL,8,A,N,N,4.23,van der Waals,False
+CB,C,GLN35,GLN,35,A,NE2,N,4.23,van der Waals,False
+O,O,PRO61,PRO,61,A,CD,C,4.25,van der Waals,False
+CB,C,PHE31,PHE,31,A,O,O,4.25,van der Waals,False
+C2,C,VAL8,VAL,8,A,CA,C,4.26,hydrophobic,False
+O2,O,GLN35,GLN,35,A,NE2,N,4.26,van der Waals,False
+NA2,N,ALA9,ALA,9,A,CA,C,4.28,van der Waals,False
+C11,C,ILE60,ILE,60,A,CG2,C,4.28,hydrophobic,False
+OE1,O,PHE31,PHE,31,A,C,C,4.29,van der Waals,False
+O2,O,LEU67,LEU,67,A,CD2,C,4.3,van der Waals,False
+C4,C,ILE7,ILE,7,A,C,C,4.31,hydrophobic,False
+C8A,C,ALA9,ALA,9,A,CB,C,4.31,hydrophobic,False
+OE1,O,PHE31,PHE,31,A,CD2,C,4.31,van der Waals,False
+C11,C,LEU67,LEU,67,A,CD2,C,4.32,hydrophobic,False
+O2,O,ARG70,ARG,70,A,NE,N,4.32,van der Waals,False
+C8A,C,PHE34,PHE,34,A,CB,C,4.33,hydrophobic,False
+C,C,ILE60,ILE,60,A,CG2,C,4.33,hydrophobic,False
+N,N,PHE34,PHE,34,A,CE1,C,4.33,van der Waals,False
+C2,C,VAL8,VAL,8,A,O,O,4.34,van der Waals,False
+NA2,N,VAL8,VAL,8,A,CA,C,4.34,van der Waals,False
+C8A,C,PHE34,PHE,34,A,CG,C,4.34,hydrophobic,False
+N10,N,SER59,SER,59,A,OG,O,4.34,van der Waals,False
+C2,C,VAL8,VAL,8,A,N,N,4.35,van der Waals,False
+C7,C,PHE31,PHE,31,A,CD1,C,4.35,hydrophobic,False
+CB,C,PHE31,PHE,31,A,CB,C,4.35,hydrophobic,False
+OE1,O,PHE31,PHE,31,A,CA,C,4.35,van der Waals,False
+C2,C,ILE7,ILE,7,A,CG1,C,4.36,hydrophobic,False
+NA2,N,PHE34,PHE,34,A,CB,C,4.37,van der Waals,False
+C4A,C,PHE34,PHE,34,A,CG,C,4.37,hydrophobic,False
+C13,C,PHE34,PHE,34,A,CD1,C,4.37,hydrophobic,False
+C,C,PHE31,PHE,31,A,CD1,C,4.37,hydrophobic,False
+C9,C,VAL115,VAL,115,A,O,O,4.38,van der Waals,False
+C12,C,PHE31,PHE,31,A,CE1,C,4.38,hydrophobic,False
+OE1,O,PHE31,PHE,31,A,O,O,4.38,van der Waals,False
+N1,N,PHE34,PHE,34,A,CG,C,4.39,van der Waals,False
+C2,C,PHE34,PHE,34,A,CG,C,4.39,hydrophobic,False
+C15,C,ILE60,ILE,60,A,CA,C,4.39,hydrophobic,False
+N1,N,ALA9,ALA,9,A,N,N,4.4,van der Waals,False
+C2,C,ALA9,ALA,9,A,CA,C,4.4,hydrophobic,False
+N3,N,VAL8,VAL,8,A,O,O,4.4,van der Waals,False
+C4,C,VAL8,VAL,8,A,N,N,4.4,van der Waals,False
+C13,C,PHE34,PHE,34,A,CE2,C,4.41,hydrophobic,False
+O1,O,GLN35,GLN,35,A,CG,C,4.41,van der Waals,False
+O2,O,GLN35,GLN,35,A,OE1,O,4.41,van der Waals,False
+N,N,PHE34,PHE,34,A,CD1,C,4.42,van der Waals,False
+CA,C,ASN64,ASN,64,A,CG,C,4.42,hydrophobic,False
+CT,C,GLN35,GLN,35,A,CG,C,4.42,hydrophobic,False
+N3,N,ALA9,ALA,9,A,CB,C,4.43,van der Waals,False
+C4,C,ALA9,ALA,9,A,N,N,4.43,van der Waals,False
+C11,C,ILE60,ILE,60,A,CG1,C,4.43,hydrophobic,False
+C12,C,PHE31,PHE,31,A,CD1,C,4.43,hydrophobic,False
+C14,C,PHE31,PHE,31,A,CE1,C,4.43,hydrophobic,False
+O,O,LEU67,LEU,67,A,CD2,C,4.43,van der Waals,False
+O8,O,LEU22,LEU,22,A,CD1,C,4.44,van der Waals,False
+NA2,N,PHE34,PHE,34,A,CD2,C,4.46,van der Waals,False
+C16,C,PHE31,PHE,31,A,CD1,C,4.48,hydrophobic,False
+C,C,PHE31,PHE,31,A,CE1,C,4.48,hydrophobic,False
+N3,N,PHE34,PHE,34,A,CG,C,4.5,van der Waals,False
+C4,C,PHE34,PHE,34,A,CG,C,4.5,van der Waals,False
+C7,C,PHE31,PHE,31,A,CZ,C,4.5,hydrophobic,False
+NA2,N,THR136,THR,136,A,CB,C,4.51,van der Waals,False
+C15,C,ILE60,ILE,60,A,CB,C,4.52,van der Waals,False
+N,N,ASN64,ASN,64,A,ND2,N,4.52,van der Waals,False
+CB,C,PHE31,PHE,31,A,CD1,C,4.52,van der Waals,False
+N3,N,ILE7,ILE,7,A,CG2,C,4.53,van der Waals,False
+C7,C,LEU22,LEU,22,A,CG,C,4.53,van der Waals,False
+CT,C,GLN35,GLN,35,A,NE2,N,4.53,van der Waals,False
+C6,C,PHE34,PHE,34,A,CD2,C,4.54,van der Waals,False
+CA,C,ARG70,ARG,70,A,NH2,N,4.54,van der Waals,False
+CB,C,ASN64,ASN,64,A,ND2,N,4.55,van der Waals,False
+C13,C,PHE31,PHE,31,A,CE1,C,4.56,van der Waals,False
+C13,C,ILE60,ILE,60,A,CG1,C,4.56,van der Waals,False
+CT,C,PHE34,PHE,34,A,CE1,C,4.56,van der Waals,False
+NA2,N,ILE7,ILE,7,A,CD1,C,4.57,van der Waals,False
+CT,C,GLN35,GLN,35,A,CD,C,4.57,van der Waals,False
+O1,O,GLN35,GLN,35,A,N,N,4.57,van der Waals,False
+CG,C,GLN35,GLN,35,A,CB,C,4.57,van der Waals,False
+C4,C,VAL8,VAL,8,A,C,C,4.58,van der Waals,False
+CM,C,SER59,SER,59,A,CB,C,4.58,van der Waals,False
+C4,C,VAL115,VAL,115,A,O,O,4.59,van der Waals,False
+N10,N,LEU22,LEU,22,A,CD2,C,4.59,van der Waals,False
+N10,N,THR56,THR,56,A,CG2,C,4.59,van der Waals,False
+CA,C,ASN64,ASN,64,A,CB,C,4.6,van der Waals,False
+CB,C,GLN35,GLN,35,A,CB,C,4.6,van der Waals,False
+O8,O,PHE31,PHE,31,A,CZ,C,4.61,van der Waals,False
+N,N,PHE31,PHE,31,A,CD1,C,4.61,van der Waals,False
+CD,C,PHE31,PHE,31,A,O,O,4.61,van der Waals,False
+N3,N,ILE7,ILE,7,A,CB,C,4.62,van der Waals,False
+C8A,C,GLU30,GLU,30,A,CD,C,4.63,van der Waals,False
+C15,C,SER59,SER,59,A,O,O,4.63,van der Waals,False
+N1,N,ALA9,ALA,9,A,CA,C,4.64,van der Waals,False
+C8A,C,GLU30,GLU,30,A,OE2,O,4.64,van der Waals,False
+C12,C,ILE60,ILE,60,A,CG1,C,4.64,van der Waals,False
+C,C,ASN64,ASN,64,A,CB,C,4.64,van der Waals,False
+O,O,PRO61,PRO,61,A,CG,C,4.64,van der Waals,False
+CT,C,PHE34,PHE,34,A,CD1,C,4.64,van der Waals,False
+O1,O,LEU67,LEU,67,A,CG,C,4.65,van der Waals,False
+N3,N,PHE34,PHE,34,A,CB,C,4.66,van der Waals,False
+CG,C,PHE31,PHE,31,A,O,O,4.66,van der Waals,False
+OE1,O,GLN35,GLN,35,A,NE2,N,4.66,van der Waals,False
+C6,C,PHE34,PHE,34,A,CE2,C,4.67,van der Waals,False
+O1,O,PHE34,PHE,34,A,CZ,C,4.67,van der Waals,False
+C2,C,ILE7,ILE,7,A,C,C,4.68,van der Waals,False
+CM,C,LEU22,LEU,22,A,CD1,C,4.68,van der Waals,False
+CM,C,THR56,THR,56,A,CG2,C,4.68,van der Waals,False
+C9,C,THR56,THR,56,A,CG2,C,4.69,van der Waals,False
+O1,O,ARG70,ARG,70,A,NE,N,4.69,van der Waals,False
+CD,C,PHE31,PHE,31,A,C,C,4.69,van der Waals,False
+N3,N,ILE7,ILE,7,A,CA,C,4.7,van der Waals,False
+C16,C,PHE31,PHE,31,A,CZ,C,4.7,van der Waals,False
+CG,C,GLN35,GLN,35,A,OE1,O,4.7,van der Waals,False
+O8,O,ALA9,ALA,9,A,CB,C,4.71,van der Waals,False
+N1,N,GLU30,GLU,30,A,O,O,4.72,van der Waals,False
+NA2,N,ILE7,ILE,7,A,C,C,4.72,van der Waals,False
+N3,N,ALA9,ALA,9,A,CA,C,4.72,van der Waals,False
+CB,C,PHE31,PHE,31,A,CG,C,4.72,van der Waals,False
+NA2,N,TYR33,TYR,33,A,CD2,C,4.73,van der Waals,False
+C11,C,ILE60,ILE,60,A,CB,C,4.73,van der Waals,False
+C12,C,PHE34,PHE,34,A,CG,C,4.73,van der Waals,False
+C13,C,PHE34,PHE,34,A,CG,C,4.73,van der Waals,False
+C,C,ASN64,ASN,64,A,CG,C,4.73,van der Waals,False
+N10,N,ILE60,ILE,60,A,CG1,C,4.74,van der Waals,False
+C15,C,SER59,SER,59,A,OG,O,4.74,van der Waals,False
+CT,C,GLN35,GLN,35,A,CA,C,4.74,van der Waals,False
+NA4,N,ILE7,ILE,7,A,CA,C,4.75,van der Waals,False
+C12,C,LEU67,LEU,67,A,CD1,C,4.75,van der Waals,False
+C13,C,PHE34,PHE,34,A,CD2,C,4.75,van der Waals,False
+O1,O,LEU67,LEU,67,A,CD1,C,4.75,van der Waals,False
+O2,O,LYS68,LYS,68,A,CG,C,4.75,van der Waals,False
+OE1,O,ARG32,ARG,32,A,N,N,4.75,van der Waals,False
+C2,C,PHE34,PHE,34,A,CE2,C,4.76,van der Waals,False
+C6,C,LEU22,LEU,22,A,CD1,C,4.76,van der Waals,False
+C8A,C,PHE34,PHE,34,A,CE2,C,4.76,van der Waals,False
+O1,O,LEU67,LEU,67,A,CB,C,4.76,van der Waals,False
+C4A,C,PHE34,PHE,34,A,CB,C,4.78,van der Waals,False
+O8,O,LEU22,LEU,22,A,CD2,C,4.78,van der Waals,False
+C4,C,ILE7,ILE,7,A,CG2,C,4.79,van der Waals,False
+C7,C,GLU30,GLU,30,A,OE1,O,4.79,van der Waals,False
+C15,C,PHE31,PHE,31,A,CZ,C,4.79,van der Waals,False
+O,O,ASN64,ASN,64,A,OD1,O,4.79,van der Waals,False
+C4,C,TYR121,TYR,121,A,OH,O,4.8,van der Waals,False
+NA4,N,ILE7,ILE,7,A,CB,C,4.8,van der Waals,False
+CD,C,PHE31,PHE,31,A,CG,C,4.8,van der Waals,False
+O2,O,GLN35,GLN,35,A,CA,C,4.81,van der Waals,False
+OE2,O,PHE31,PHE,31,A,CB,C,4.81,van der Waals,False
+N1,N,VAL8,VAL,8,A,C,C,4.82,van der Waals,False
+O8,O,PHE34,PHE,34,A,CD2,C,4.82,van der Waals,False
+O8,O,GLU30,GLU,30,A,CD,C,4.82,van der Waals,False
+C2,C,THR136,THR,136,A,OG1,O,4.83,van der Waals,False
+N3,N,GLU30,GLU,30,A,OE2,O,4.83,van der Waals,False
+NA4,N,VAL8,VAL,8,A,C,C,4.83,van der Waals,False
+O8,O,PHE34,PHE,34,A,CB,C,4.83,van der Waals,False
+C15,C,LEU22,LEU,22,A,CD2,C,4.83,van der Waals,False
+C15,C,PHE31,PHE,31,A,CD1,C,4.83,van der Waals,False
+C15,C,ILE60,ILE,60,A,CG2,C,4.83,van der Waals,False
+CB,C,PHE31,PHE,31,A,C,C,4.83,van der Waals,False
+CG,C,ASN64,ASN,64,A,ND2,N,4.84,van der Waals,False
+C12,C,PHE34,PHE,34,A,CE2,C,4.85,van der Waals,False
+CG,C,PHE31,PHE,31,A,CB,C,4.85,van der Waals,False
+N3,N,GLU30,GLU,30,A,OE1,O,4.86,van der Waals,False
+C6,C,LEU22,LEU,22,A,CD2,C,4.86,van der Waals,False
+C13,C,PHE31,PHE,31,A,CD1,C,4.86,van der Waals,False
+NA4,N,ALA9,ALA,9,A,N,N,4.87,van der Waals,False
+C11,C,PHE34,PHE,34,A,CE1,C,4.87,van der Waals,False
+C13,C,ILE60,ILE,60,A,CD1,C,4.87,van der Waals,False
+O1,O,PHE34,PHE,34,A,CG,C,4.87,van der Waals,False
+O1,O,PHE31,PHE,31,A,O,O,4.87,van der Waals,False
+O2,O,LYS68,LYS,68,A,N,N,4.87,van der Waals,False
+O8,O,PHE34,PHE,34,A,CG,C,4.88,van der Waals,False
+C12,C,ILE60,ILE,60,A,CD1,C,4.88,van der Waals,False
+NA2,N,TYR33,TYR,33,A,CE2,C,4.89,van der Waals,False
+O8,O,LEU22,LEU,22,A,CG,C,4.89,van der Waals,False
+O,O,PHE31,PHE,31,A,CD1,C,4.89,van der Waals,False
+O2,O,LEU67,LEU,67,A,CB,C,4.89,van der Waals,False
+CD,C,GLN35,GLN,35,A,CD,C,4.89,van der Waals,False
+C4A,C,GLU30,GLU,30,A,OE1,O,4.9,van der Waals,False
+C14,C,SER59,SER,59,A,OG,O,4.9,van der Waals,False
+C14,C,ILE60,ILE,60,A,CD1,C,4.9,van der Waals,False
+C6,C,PHE31,PHE,31,A,CE1,C,4.91,van der Waals,False
+CG,C,GLN35,GLN,35,A,CG,C,4.91,van der Waals,False
+NA4,N,PHE34,PHE,34,A,CZ,C,4.92,van der Waals,False
+CM,C,LEU22,LEU,22,A,CG,C,4.92,van der Waals,False
+C15,C,ILE60,ILE,60,A,CD1,C,4.92,van der Waals,False
+C16,C,ILE60,ILE,60,A,CD1,C,4.92,van der Waals,False
+O1,O,GLN35,GLN,35,A,CD,C,4.92,van der Waals,False
+C15,C,ILE60,ILE,60,A,N,N,4.93,van der Waals,False
+O,O,PHE31,PHE,31,A,CE1,C,4.93,van der Waals,False
+O1,O,GLN35,GLN,35,A,NE2,N,4.93,van der Waals,False
+OE2,O,GLN35,GLN,35,A,CD,C,4.93,van der Waals,False
+NA2,N,PHE34,PHE,34,A,CG,C,4.94,van der Waals,False
+NA2,N,PHE34,PHE,34,A,CA,C,4.94,van der Waals,False
+NA4,N,VAL115,VAL,115,A,CG1,C,4.94,van der Waals,False
+C8A,C,ALA9,ALA,9,A,N,N,4.94,van der Waals,False
+C15,C,PRO61,PRO,61,A,CD,C,4.94,van der Waals,False
+N,N,ASN64,ASN,64,A,CB,C,4.94,van der Waals,False
+N1,N,GLU30,GLU,30,A,CG,C,4.95,van der Waals,False
+NA4,N,ILE7,ILE,7,A,CG1,C,4.95,van der Waals,False
+C8A,C,PHE31,PHE,31,A,CE1,C,4.95,van der Waals,False
+C9,C,PHE34,PHE,34,A,CE2,C,4.95,van der Waals,False
+CA,C,GLN35,GLN,35,A,CB,C,4.95,van der Waals,False
+CT,C,LEU67,LEU,67,A,CG,C,4.95,van der Waals,False
+O2,O,LEU67,LEU,67,A,CA,C,4.95,van der Waals,False
+CB,C,GLN35,GLN,35,A,CD,C,4.95,van der Waals,False
+C4,C,PHE34,PHE,34,A,CZ,C,4.96,van der Waals,False
+C11,C,ILE60,ILE,60,A,CD1,C,4.96,van der Waals,False
+C16,C,SER59,SER,59,A,O,O,4.96,van der Waals,False
+CT,C,LEU67,LEU,67,A,CB,C,4.96,van der Waals,False
+C4,C,PHE34,PHE,34,A,CB,C,4.97,van der Waals,False
+C4,C,ILE7,ILE,7,A,CG1,C,4.98,van der Waals,False
+C4A,C,ALA9,ALA,9,A,CB,C,4.98,van der Waals,False
+CA,C,ARG70,ARG,70,A,NH1,N,4.98,van der Waals,False
+CT,C,ARG70,ARG,70,A,NE,N,4.98,van der Waals,False
+C4A,C,PHE34,PHE,34,A,CZ,C,4.99,van der Waals,False
+CM,C,SER59,SER,59,A,O,O,4.99,van der Waals,False
+C11,C,PRO61,PRO,61,A,CD,C,4.99,van der Waals,False
+N,N,ASN64,ASN,64,A,CG,C,4.99,van der Waals,False
+C4A,C,ALA9,ALA,9,A,N,N,5.0,van der Waals,False
