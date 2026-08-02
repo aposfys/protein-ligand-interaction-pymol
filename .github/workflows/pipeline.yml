@@ -1,0 +1,86 @@
+name: Pipeline
+
+# CI proves the code is sound; this proves the analysis still runs end to end
+# against the live RCSB API. It needs no conda toolchain -- the numerical work
+# is pure Biopython and RDKit -- so it stays fast enough to run on every push.
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "src/plinter/**"
+      - ".github/workflows/pipeline.yml"
+
+concurrency:
+  group: pipeline-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analysis:
+    name: End-to-end analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,chemistry]"
+
+      - name: Run the analysis from a clean state
+        run: |
+          rm -rf data/pdb ci-results
+          python -m plinter.cli --data-dir data/pdb --results-dir ci-results
+
+      - name: Check the results still hold
+        run: |
+          python - <<'PY'
+          import json, sys
+          from pathlib import Path
+
+          summary = json.loads(Path("ci-results/summary.json").read_text())
+          extras = json.loads(Path("ci-results/extras.json").read_text())
+
+          by_ligand = {e["ligand"]: e for e in summary["per_ligand"]}
+          if set(by_ligand) != {"MOT", "LII"}:
+              sys.exit(f"unexpected ligands: {sorted(by_ligand)}")
+
+          # Glu30 anchors the 2,4-diaminopyrimidine of both antifolates. If a
+          # future RCSB revision or a code change loses that, the central claim
+          # of this repository is wrong and the job should fail.
+          shared = set(summary["comparison"]["shared_hydrogen_bond_residues"])
+          if "GLU30" not in shared:
+              sys.exit(f"Glu30 is no longer a shared H-bond partner: {sorted(shared)}")
+
+          # Full recall against the depositors' annotation.
+          for entry in extras["validation"]:
+              if entry["recall_of_reference"] < 1.0:
+                  sys.exit(f"{entry['reference']}: recall dropped to {entry['recall_of_reference']}")
+
+          # The lipophilic analogue must remain the more lipophilic one.
+          profiles = {p["ligand"]: p for p in extras["chemistry"]["profiles"]}
+          if not profiles["LII"]["logp"] > profiles["MOT"]["logp"]:
+              sys.exit("cLogP ordering reversed")
+
+          print(f"MOT {by_ligand['MOT']['contacts']} contacts, "
+                f"LII {by_ligand['LII']['contacts']} contacts")
+          print("shared H-bond partners:", sorted(shared))
+          print("analysis reproduced")
+          PY
+
+      - name: Upload outputs for inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-results
+          path: ci-results/
+          retention-days: 7
