@@ -162,8 +162,6 @@ results/          Generated tables and figures
 6. Landrum, G. RDKit: Open-source cheminformatics. https://www.rdkit.org
 7. Bouysset, C. & Fiorucci, S. (2021). ProLIF: a library to encode molecular interactions as fingerprints. *Journal of Cheminformatics* **13**, 72.
 
-## Author
+---
 
-**Apostolos Fysekidis** — MSc Bioinformatics & Computational Biology, National and Kapodistrian University of Athens.
-
-Licensed under the [MIT License](LICENSE).
+Apostolos Fysekidis · [MIT Licence](LICENSE)
