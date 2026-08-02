@@ -7,10 +7,10 @@ from .structures import TARGETS, download_structure, load_structure
 __version__ = "1.0.0"
 
 __all__ = [
+    "TARGETS",
     "Comparison",
     "Contact",
     "Fingerprint",
-    "TARGETS",
     "build_fingerprint",
     "contacting_residues",
     "download_structure",
