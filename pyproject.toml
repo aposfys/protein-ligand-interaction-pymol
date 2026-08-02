@@ -21,7 +21,9 @@ dependencies = ["biopython>=1.80"]
 
 [project.optional-dependencies]
 figures = ["matplotlib>=3.7"]
-dev = ["pytest>=7.0", "matplotlib>=3.7"]
+chemistry = ["rdkit>=2023.9"]
+validation = ["prolif>=2.0", "MDAnalysis>=2.7"]
+dev = ["pytest>=7.0", "matplotlib>=3.7", "rdkit>=2023.9", "ruff>=0.6", "mypy>=1.11"]
 
 [project.scripts]
 plinter = "plinter.cli:main"
@@ -32,3 +34,41 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+[tool.ruff]
+line-length = 95
+target-version = "py310"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+    "E501",    # line length is handled by the formatter
+    "B008",    # function calls in argument defaults are fine for argparse
+    "RUF001",  # unicode in scientific strings (Å, ×, ≤) is deliberate
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["B011", "SIM117"]
+
+[tool.mypy]
+# No python_version pin: mypy follows the interpreter running it, so the
+# CI matrix checks each supported version against its own dependency stubs.
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+check_untyped_defs = true
+exclude = ["^tests/"]
+
+[[tool.mypy.overrides]]
+module = ["rdkit.*", "prolif.*", "MDAnalysis.*"]
+ignore_missing_imports = true
+
+# RDKit ships partial inline types, but populates Descriptors, Crippen and
+# Lipinski dynamically at import, so every descriptor call looks like a missing
+# attribute to a static checker. The calls are covered by tests instead.
+[[tool.mypy.overrides]]
+module = ["plinter.chemistry"]
+disable_error_code = ["attr-defined"]

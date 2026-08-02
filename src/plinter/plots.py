@@ -7,9 +7,9 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.pyplot as plt
 
-from .compare import Comparison  # noqa: E402
+from .compare import Comparison
 
 INTERACTION_COLOURS = {
     "salt bridge": "#b4413c",
@@ -55,8 +55,14 @@ def plot_closest_approach(comparison: Comparison, path: Path) -> Path:
 
     ax.axvline(3.5, color="#b4413c", linestyle="--", linewidth=1, zorder=0)
     ax.text(
-        3.45, len(residues) - 0.4, "hydrogen-bond cutoff",
-        ha="right", va="top", fontsize=8, color="#b4413c", rotation=90,
+        3.45,
+        len(residues) - 0.4,
+        "hydrogen-bond cutoff",
+        ha="right",
+        va="top",
+        fontsize=8,
+        color="#b4413c",
+        rotation=90,
     )
 
     ax.set_yticks(range(len(residues)))
@@ -67,9 +73,7 @@ def plot_closest_approach(comparison: Comparison, path: Path) -> Path:
         "Binding-site residues of human DHFR\ncontacted by each antifolate", fontsize=11
     )
     ax.scatter([], [], s=46, color=FIRST_COLOUR, label=f"{first.ligand} ({first.pdb_id})")
-    ax.scatter(
-        [], [], s=46, color=SECOND_COLOUR, label=f"{second.ligand} ({second.pdb_id})"
-    )
+    ax.scatter([], [], s=46, color=SECOND_COLOUR, label=f"{second.ligand} ({second.pdb_id})")
     ax.legend(frameon=False, loc="upper right", fontsize=9)
     ax.spines[["top", "right"]].set_visible(False)
     ax.grid(axis="x", color="#eef1f3", zorder=0)
@@ -91,8 +95,7 @@ def plot_interaction_profile(comparison: Comparison, path: Path) -> Path:
     bottoms = [0, 0]
     for interaction in types:
         counts = [
-            sum(1 for c in fp.contacts if c.interaction == interaction)
-            for fp in fingerprints
+            sum(1 for c in fp.contacts if c.interaction == interaction) for fp in fingerprints
         ]
         ax.bar(
             [f"{fp.ligand}\n{fp.pdb_id}" for fp in fingerprints],
@@ -101,7 +104,7 @@ def plot_interaction_profile(comparison: Comparison, path: Path) -> Path:
             label=interaction,
             color=INTERACTION_COLOURS[interaction],
         )
-        bottoms = [b + c for b, c in zip(bottoms, counts)]
+        bottoms = [b + c for b, c in zip(bottoms, counts, strict=True)]
 
     ax.set_ylabel("Heavy-atom contacts within 5 Å")
     ax.set_title("Interaction-type composition")

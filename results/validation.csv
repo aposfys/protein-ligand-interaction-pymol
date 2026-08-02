@@ -1,0 +1,3 @@
+reference,residues_ours,residues_reference,shared,only_ours,only_reference,jaccard,recall_of_reference
+1HFR SITE records,21,14,"['ALA9', 'ARG70', 'ASN64', 'GLN35', 'GLU30', 'ILE7', 'LEU22', 'LEU67', 'PHE31', 'PHE34', 'SER59', 'THR136', 'VAL115', 'VAL8']","['ARG32', 'ILE60', 'LYS68', 'PRO61', 'THR56', 'TYR121', 'TYR33']",[],0.667,1.0
+1KMV SITE records,18,10,"['ALA9', 'GLU30', 'ILE7', 'PHE31', 'PHE34', 'PRO61', 'SER59', 'TYR121', 'VAL115', 'VAL8']","['ASN64', 'GLY116', 'ILE60', 'LEU22', 'LEU67', 'THR136', 'THR56', 'TYR33']",[],0.556,1.0

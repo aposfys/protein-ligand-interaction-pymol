@@ -1,0 +1,123 @@
+{
+  "validation": [
+    {
+      "reference": "1HFR SITE records",
+      "residues_ours": 21,
+      "residues_reference": 14,
+      "shared": [
+        "ALA9",
+        "ARG70",
+        "ASN64",
+        "GLN35",
+        "GLU30",
+        "ILE7",
+        "LEU22",
+        "LEU67",
+        "PHE31",
+        "PHE34",
+        "SER59",
+        "THR136",
+        "VAL115",
+        "VAL8"
+      ],
+      "only_ours": [
+        "ARG32",
+        "ILE60",
+        "LYS68",
+        "PRO61",
+        "THR56",
+        "TYR121",
+        "TYR33"
+      ],
+      "only_reference": [],
+      "jaccard": 0.667,
+      "recall_of_reference": 1.0
+    },
+    {
+      "reference": "1KMV SITE records",
+      "residues_ours": 18,
+      "residues_reference": 10,
+      "shared": [
+        "ALA9",
+        "GLU30",
+        "ILE7",
+        "PHE31",
+        "PHE34",
+        "PRO61",
+        "SER59",
+        "TYR121",
+        "VAL115",
+        "VAL8"
+      ],
+      "only_ours": [
+        "ASN64",
+        "GLY116",
+        "ILE60",
+        "LEU22",
+        "LEU67",
+        "THR136",
+        "THR56",
+        "TYR33"
+      ],
+      "only_reference": [],
+      "jaccard": 0.556,
+      "recall_of_reference": 1.0
+    }
+  ],
+  "chemistry": {
+    "profiles": [
+      {
+        "ligand": "MOT",
+        "name": "N-[4-[(2,4-Diaminofuro[2,3D]Pyrimidin-5-Yl)Methyl]Methylamino]-Benzoyl]-L-Glutamate",
+        "formula": "C20 H22 N6 O6",
+        "smiles": "CN(Cc1coc2nc(N)nc(N)c12)c3ccc(cc3)C(=O)N[C@@H](CCC(O)=O)C(O)=O",
+        "molecular_weight": 442.43,
+        "logp": 1.07,
+        "tpsa": 197.9,
+        "hydrogen_bond_donors": 5,
+        "hydrogen_bond_acceptors": 9,
+        "rotatable_bonds": 9,
+        "aromatic_rings": 3,
+        "formal_charge": 0,
+        "fraction_sp3": 0.25,
+        "heavy_atoms": 32
+      },
+      {
+        "ligand": "LII",
+        "name": "(Z)-6-(2-[2,5-Dimethoxyphenyl]Ethen-1-Yl)-2,4-Diamino-5-Methylpyrido[2,3-D]Pyrimidine",
+        "formula": "C18 H19 N5 O2",
+        "smiles": "COc1ccc(OC)c(\\C=C/c2cnc3nc(N)nc(N)c3c2C)c1",
+        "molecular_weight": 337.38,
+        "logp": 2.69,
+        "tpsa": 109.17,
+        "hydrogen_bond_donors": 2,
+        "hydrogen_bond_acceptors": 7,
+        "rotatable_bonds": 4,
+        "aromatic_rings": 3,
+        "formal_charge": 0,
+        "fraction_sp3": 0.167,
+        "heavy_atoms": 25
+      }
+    ],
+    "comparison": {
+      "ligands": [
+        "MOT",
+        "LII"
+      ],
+      "lipophilicity_difference_logp": 1.62,
+      "polar_surface_difference_tpsa": -88.73,
+      "formal_charge": {
+        "MOT": 0,
+        "LII": 0
+      },
+      "rotatable_bonds": {
+        "MOT": 9,
+        "LII": 4
+      },
+      "lipinski_violations": {
+        "MOT": [],
+        "LII": []
+      }
+    }
+  }
+}
