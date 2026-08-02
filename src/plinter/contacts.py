@@ -7,8 +7,8 @@ structures deposited without hydrogens (Ferreira de Freitas & Schapira, 2017).
 
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
-from typing import Iterable, Iterator, Sequence
+from collections.abc import Iterable, Iterator, Sequence
+from dataclasses import asdict, dataclass
 
 from Bio.PDB import NeighborSearch
 from Bio.PDB.Atom import Atom
@@ -29,13 +29,18 @@ POLAR_ELEMENTS = frozenset({"N", "O"})
 
 # Formally charged side-chain atoms, used to flag salt bridges.
 CATIONIC_ATOMS = {
-    ("ARG", "NH1"), ("ARG", "NH2"), ("ARG", "NE"),
+    ("ARG", "NH1"),
+    ("ARG", "NH2"),
+    ("ARG", "NE"),
     ("LYS", "NZ"),
-    ("HIS", "ND1"), ("HIS", "NE2"),
+    ("HIS", "ND1"),
+    ("HIS", "NE2"),
 }
 ANIONIC_ATOMS = {
-    ("ASP", "OD1"), ("ASP", "OD2"),
-    ("GLU", "OE1"), ("GLU", "OE2"),
+    ("ASP", "OD1"),
+    ("ASP", "OD2"),
+    ("GLU", "OE1"),
+    ("GLU", "OE2"),
 }
 
 # Non-biological species routinely present in crystals: cryoprotectants,
@@ -43,11 +48,29 @@ ANIONIC_ATOMS = {
 # are excluded from the protein environment by default.
 CRYSTALLISATION_ADDITIVES = frozenset(
     {
-        "HOH", "DOD",                      # water
-        "DMS", "GOL", "EDO", "MPD", "PEG", # cryoprotectants
-        "SO4", "PO4", "ACT", "CIT", "TRS", # buffer / precipitant ions
-        "MES", "EPE", "FMT", "IMD", "NO3",
-        "CL", "NA", "K", "MG", "CA", "ZN",
+        "HOH",
+        "DOD",  # water
+        "DMS",
+        "GOL",
+        "EDO",
+        "MPD",
+        "PEG",  # cryoprotectants
+        "SO4",
+        "PO4",
+        "ACT",
+        "CIT",
+        "TRS",  # buffer / precipitant ions
+        "MES",
+        "EPE",
+        "FMT",
+        "IMD",
+        "NO3",
+        "CL",
+        "NA",
+        "K",
+        "MG",
+        "CA",
+        "ZN",
     }
 )
 
@@ -58,14 +81,14 @@ class Contact:
 
     ligand_atom: str
     ligand_element: str
-    residue: str          # e.g. "GLU30"
+    residue: str  # e.g. "GLU30"
     residue_name: str
     residue_seq: int
     chain: str
     protein_atom: str
     protein_element: str
     distance: float
-    interaction: str      # hydrogen bond | salt bridge | hydrophobic | van der Waals
+    interaction: str  # hydrogen bond | salt bridge | hydrophobic | van der Waals
     hydrogen_bond: bool
 
     def as_row(self) -> dict:
@@ -154,9 +177,7 @@ def find_contacts(
     """
     ligand_atoms = list(iter_ligand_atoms(structure, ligand_resname))
     if not ligand_atoms:
-        raise ValueError(
-            f"Ligand {ligand_resname!r} not found in {structure.get_id()!r}"
-        )
+        raise ValueError(f"Ligand {ligand_resname!r} not found in {structure.get_id()!r}")
 
     excluded = set(CRYSTALLISATION_ADDITIVES) | {ligand_resname.upper()}
     excluded.update(name.strip().upper() for name in exclude_resnames)

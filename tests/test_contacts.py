@@ -93,9 +93,7 @@ def test_comparison_partitions_residues(fingerprints):
     assert comparison.unique_to(second).isdisjoint(first.residues)
 
     partitioned = (
-        comparison.shared_residues
-        | comparison.unique_to(first)
-        | comparison.unique_to(second)
+        comparison.shared_residues | comparison.unique_to(first) | comparison.unique_to(second)
     )
     assert partitioned == first.residues | second.residues
 
@@ -114,3 +112,87 @@ def test_missing_ligand_raises():
         pytest.skip(f"{path} missing; run `make data` first")
     with pytest.raises(ValueError, match="not found"):
         find_contacts(load_structure(path), ligand_resname="XYZ")
+
+
+# --- ligand chemistry --------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def ligand_profiles():
+    from plinter import chemistry
+
+    cache = Path(__file__).resolve().parents[1] / "data"
+    try:
+        return {target.ligand: chemistry.profile(target.ligand, cache) for target in TARGETS}
+    except Exception as error:  # offline and uncached
+        pytest.skip(f"chemical component data unavailable: {error}")
+
+
+def test_molecular_weights_match_the_deposited_formulae(ligand_profiles):
+    assert ligand_profiles["MOT"].molecular_weight == pytest.approx(442.4, abs=0.5)
+    assert ligand_profiles["LII"].molecular_weight == pytest.approx(337.4, abs=0.5)
+
+
+def test_the_lipophilic_antifolate_is_more_lipophilic(ligand_profiles):
+    """LII is described as lipophilic; cLogP and TPSA should both agree."""
+    assert ligand_profiles["LII"].logp > ligand_profiles["MOT"].logp
+    assert ligand_profiles["LII"].tpsa < ligand_profiles["MOT"].tpsa
+
+
+def test_only_the_classical_antifolate_carries_carboxylates(ligand_profiles):
+    """The glutamate tail is what reaches the Arg70 subsite; LII has none."""
+    from plinter import chemistry
+
+    assert chemistry.ionisable_groups(ligand_profiles["MOT"])["carboxylic_acid"] == 2
+    assert chemistry.ionisable_groups(ligand_profiles["LII"])["carboxylic_acid"] == 0
+
+
+def test_both_share_the_diaminopyrimidine_amines(ligand_profiles):
+    """The 2,4-diamino head group is the conserved recognition motif."""
+    from plinter import chemistry
+
+    for profile in ligand_profiles.values():
+        assert chemistry.ionisable_groups(profile)["primary_aromatic_amine"] == 2
+
+
+# --- validation --------------------------------------------------------------
+
+
+def test_site_records_are_linked_through_remark_800():
+    """Matching on residue names alone selects the NADPH site, not the ligand's."""
+    from plinter import validation
+
+    residues = validation.site_record_residues(DATA_DIR / "1kmv.pdb", "LII")
+    assert "GLU30" in residues  # in the antifolate site
+    assert "ASP21" not in residues  # in the NADPH site
+
+
+def test_missing_ligand_site_returns_empty():
+    from plinter import validation
+
+    assert validation.site_record_residues(DATA_DIR / "1hfr.pdb", "XYZ") == frozenset()
+
+
+def test_pipeline_recovers_every_annotated_residue(fingerprints):
+    """No false negatives against the depositors' own annotation."""
+    from plinter import validation
+
+    for target, fingerprint in zip(TARGETS, fingerprints, strict=True):
+        reference = validation.site_record_residues(DATA_DIR / target.filename, target.ligand)
+        assert reference, f"no SITE record for {target.ligand}"
+        agreement = validation.compare_to_reference(
+            sorted(fingerprint.residues), reference, target.pdb_id
+        )
+        assert agreement.recall_of_reference == 1.0
+        assert not agreement.only_theirs
+
+
+def test_prolif_refuses_unprotonated_structures():
+    """Silently degrading on a hydrogen-free crystal structure would look like
+    disagreement with this pipeline when it is really an unprepared input."""
+    from plinter import validation
+
+    assert not validation.has_hydrogens(DATA_DIR / "1kmv.pdb")
+    pytest.importorskip("prolif")
+    with pytest.raises(ValueError, match="no explicit hydrogens"):
+        validation.prolif_residues(DATA_DIR / "1kmv.pdb", "LII")

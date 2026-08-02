@@ -6,6 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from . import chemistry, validation
 from .compare import Comparison, build_fingerprint
 from .contacts import CONTACT_CUTOFF, find_contacts, hydrogen_bonds
 from .report import (
@@ -54,6 +55,16 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Skip figure generation (avoids the matplotlib dependency).",
     )
+    parser.add_argument(
+        "--no-chemistry",
+        action="store_true",
+        help="Skip the RDKit ligand profiling stage.",
+    )
+    parser.add_argument(
+        "--no-validation",
+        action="store_true",
+        help="Skip the comparison against the depositors' SITE records.",
+    )
     return parser.parse_args(argv)
 
 
@@ -94,6 +105,56 @@ def main(argv: list[str] | None = None) -> int:
     print("\n## Comparative analysis\n")
     print(format_comparison(comparison))
 
+    extras: dict[str, object] = {}
+
+    if not args.no_validation:
+        print("\n## Validation against the depositors' annotation\n")
+        agreements = []
+        for target, fingerprint in zip(TARGETS, fingerprints, strict=True):
+            reference = validation.site_record_residues(
+                args.data_dir / target.filename, target.ligand
+            )
+            if not reference:
+                print(f"{target.pdb_id}: no SITE record for {target.ligand}")
+                continue
+            agreement = validation.compare_to_reference(
+                sorted(fingerprint.residues),
+                reference,
+                f"{target.pdb_id} SITE records",
+            )
+            agreements.append(agreement.as_dict())
+            print(validation.format_agreement(agreement))
+            print()
+        extras["validation"] = agreements
+        write_rows_csv(agreements, args.results_dir / "validation.csv")
+
+    if not args.no_chemistry:
+        print("\n## Ligand physicochemical profile\n")
+        profiles = [chemistry.profile(target.ligand, args.data_dir) for target in TARGETS]
+        rows = []
+        for entry in profiles:
+            groups = chemistry.ionisable_groups(entry)
+            print(
+                f"{entry.ligand}: MW {entry.molecular_weight}, "
+                f"cLogP {entry.logp:+.2f}, TPSA {entry.tpsa} A^2, "
+                f"HBD {entry.hydrogen_bond_donors}, HBA {entry.hydrogen_bond_acceptors}, "
+                f"rotatable {entry.rotatable_bonds}, "
+                f"carboxylates {groups['carboxylic_acid']}"
+            )
+            rows.append({**entry.as_dict(), **groups})
+        write_rows_csv(rows, args.results_dir / "ligand_properties.csv")
+        extras["chemistry"] = {
+            "profiles": [entry.as_dict() for entry in profiles],
+            "comparison": chemistry.compare(*profiles),
+        }
+
+    if extras:
+        import json
+
+        (args.results_dir / "extras.json").write_text(
+            json.dumps(extras, indent=2) + "\n", encoding="utf-8"
+        )
+
     if not args.no_figures:
         try:
             from .plots import plot_closest_approach, plot_interaction_profile
@@ -101,9 +162,7 @@ def main(argv: list[str] | None = None) -> int:
             print("\nmatplotlib is not installed; skipping figures.", file=sys.stderr)
         else:
             plot_closest_approach(comparison, args.results_dir / "closest_approach.png")
-            plot_interaction_profile(
-                comparison, args.results_dir / "interaction_profile.png"
-            )
+            plot_interaction_profile(comparison, args.results_dir / "interaction_profile.png")
 
     print(f"\nResults written to {args.results_dir}/")
     return 0
