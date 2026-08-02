@@ -94,7 +94,9 @@ def profile(ligand: str, cache_dir: Path) -> LigandProfile:
 
     RDLogger.DisableLog("rdApp.*")
 
-    record = fetch_chemcomp(ligand, cache_dir / f"chemcomp_{ligand.upper()}.json")
+    # A dedicated subdirectory, so the cache lands in one place regardless of
+    # whether the caller passes the PDB directory or the data root.
+    record = fetch_chemcomp(ligand, cache_dir / "chemcomp" / f"{ligand.upper()}.json")
     chem_comp = record.get("chem_comp", {})
     smiles = _smiles_from(record)
 
