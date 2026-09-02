@@ -1,15 +1,21 @@
 """Independent checks on the contact detection.
 
 A geometric contact analysis is only trustworthy if an independent
-implementation, and the people who solved the structure, agree with it. Two
+implementation, and the people who solved the structure, agree with it. Three
 references are used:
 
-* **ProLIF**, a community interaction-fingerprint library built on RDKit and
-  MDAnalysis. It applies its own geometric criteria, including angular terms
-  this pipeline does not model, so agreement is meaningful and disagreement is
-  informative.
+* **PLIP** (Adasme et al., *Nucleic Acids Research* 2021), the de facto standard
+  for protein-ligand interaction profiling. It protonates the structure
+  internally with OpenBabel and types interactions from perceived chemistry, so
+  it runs on a deposited X-ray entry as-is. This is the reference that actually
+  executes on every structure in this project.
 * **The depositors' SITE records**, the binding-site residues annotated in the
   PDB entry itself.
+* **ProLIF**, a community interaction-fingerprint library built on RDKit and
+  MDAnalysis. It applies its own geometric criteria, including angular terms
+  this pipeline does not model. It requires explicit hydrogens, which no X-ray
+  entry analysed here carries, so :func:`prolif_residues` raises on the
+  deposited files and is available only for externally protonated input.
 
 Neither is ground truth. The point is to make the differences explicit rather
 than to claim a single correct answer.
@@ -21,6 +27,7 @@ import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 # SITE records list residues in fixed-width groups of four across each line.
 SITE_RESIDUE = re.compile(r"([A-Z0-9]{3})\s+([A-Z])\s*(-?\d+)")
@@ -205,3 +212,90 @@ def format_agreement(agreement: Agreement) -> str:
         + (", ".join(sorted(agreement.only_theirs)) or "none"),
     ]
     return "\n".join(lines)
+
+
+@dataclass(frozen=True)
+class PlipProfile:
+    """PLIP's typed interaction profile for one ligand."""
+
+    ligand: str
+    binding_site: str
+    residues: frozenset[str]
+    counts: dict[str, int]
+
+    def as_dict(self) -> dict[str, object]:
+        return {
+            "ligand": self.ligand,
+            "binding_site": self.binding_site,
+            "residues": sorted(self.residues),
+            "n_residues": len(self.residues),
+            **{f"n_{name}": count for name, count in sorted(self.counts.items())},
+        }
+
+
+# Interaction classes PLIP types that this pipeline's geometric rules do not
+# model at all. Reported explicitly rather than absorbed into "van der Waals".
+UNMODELLED_BY_US = ("pi_stacking", "pi_cation", "water_bridge", "halogen_bond")
+
+
+def plip_interactions(pdb: Path, ligand: str) -> PlipProfile:
+    """Typed protein-ligand interactions according to PLIP.
+
+    PLIP protonates the structure internally with OpenBabel and assigns
+    interactions from perceived chemistry, so unlike :func:`prolif_residues` it
+    runs directly on a deposited X-ray entry. That is the whole reason it is
+    here: every structure this project analyses is deposited without hydrogens,
+    which is exactly the input ProLIF refuses.
+
+    Two differences from this pipeline are expected and are the informative
+    part of the comparison:
+
+    * PLIP reports only *chemically typed* interactions, where this pipeline
+      reports every heavy-atom contact within a distance cutoff. PLIP's residue
+      count is therefore much smaller, and the two numbers answer different
+      questions.
+    * PLIP models pi-stacking, pi-cation, halogen bonds and water-mediated
+      bridges. This pipeline models none of them, and strips waters before it
+      starts, so it cannot see a water bridge even in principle.
+
+    Raises:
+        ValueError: if no PLIP binding site corresponds to the ligand.
+    """
+    from plip.structure.preparation import PDBComplex
+
+    complex_ = PDBComplex()
+    complex_.load_pdb(str(pdb))
+    complex_.analyze()
+
+    prefix = f"{ligand.upper()}:"
+    for site_key, site in complex_.interaction_sets.items():
+        if not site_key.startswith(prefix):
+            continue
+
+        # PLIP exposes one attribute per interaction class; each element carries
+        # the residue it involves as ``restype``/``resnr``.
+        by_class: tuple[tuple[str, list[Any]], ...] = (
+            ("hydrophobic", list(site.hydrophobic_contacts)),
+            ("hydrogen_bond", list(site.hbonds_pdon) + list(site.hbonds_ldon)),
+            ("salt_bridge", list(site.saltbridge_lneg) + list(site.saltbridge_pneg)),
+            ("pi_stacking", list(site.pistacking)),
+            ("water_bridge", list(site.water_bridges)),
+            ("halogen_bond", list(site.halogen_bonds)),
+        )
+
+        residues: set[str] = set()
+        counts: dict[str, int] = {}
+        for name, interactions in by_class:
+            if not interactions:
+                continue
+            counts[name] = len(interactions)
+            residues.update(f"{i.restype}{i.resnr}" for i in interactions)
+
+        return PlipProfile(
+            ligand=ligand.upper(),
+            binding_site=site_key,
+            residues=frozenset(residues),
+            counts=counts,
+        )
+
+    raise ValueError(f"PLIP found no binding site for ligand {ligand!r} in {pdb.name}")

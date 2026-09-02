@@ -1,0 +1,3 @@
+pdb_id,ligand,binding_site,residues,n_residues,n_hydrogen_bond,n_hydrophobic,n_pi_stacking,n_salt_bridge,n_water_bridge
+1HFR,MOT,MOT:A:188,"['ARG70', 'ASN64', 'GLN35', 'GLU30', 'ILE60', 'ILE7', 'PHE31', 'PHE34', 'VAL8']",9,4,3,1,2,2
+1KMV,LII,LII:A:201,"['GLU30', 'ILE7', 'PHE31', 'PHE34', 'THR136']",5,2,1,1,1,1

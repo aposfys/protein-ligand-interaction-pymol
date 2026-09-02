@@ -196,3 +196,78 @@ def test_prolif_refuses_unprotonated_structures():
     pytest.importorskip("prolif")
     with pytest.raises(ValueError, match="no explicit hydrogens"):
         validation.prolif_residues(DATA_DIR / "1kmv.pdb", "LII")
+
+
+@pytest.fixture(scope="module")
+def plip_profiles():
+    """PLIP's typed interaction profile for both complexes."""
+    pytest.importorskip("plip")
+    from plinter import validation
+
+    profiles = {}
+    for target in TARGETS:
+        path = DATA_DIR / target.filename
+        if not path.exists():
+            pytest.skip(f"{path} missing; run `make data` first")
+        profiles[target.ligand] = validation.plip_interactions(path, target.ligand)
+    return profiles
+
+
+def test_plip_runs_on_the_deposited_structures(plip_profiles):
+    """PLIP protonates internally, so it accepts the very files ProLIF refuses.
+
+    That is why it is the reference that actually executes here: every entry in
+    this project is a crystal structure deposited without hydrogens.
+    """
+    from plinter import validation
+
+    for target in TARGETS:
+        assert not validation.has_hydrogens(DATA_DIR / target.filename)
+        assert plip_profiles[target.ligand].residues
+
+
+def test_plip_independently_reproduces_the_arg70_discrimination(plip_profiles):
+    """The headline finding, confirmed by an independent implementation.
+
+    MOT's ionised glutamate tail reaches Arg70; LII has no anion to pair with
+    the guanidinium. PLIP types interactions from perceived chemistry rather
+    than from this pipeline's distance rules, so agreement here is not
+    circular.
+    """
+    assert "ARG70" in plip_profiles["MOT"].residues
+    assert "ARG70" not in plip_profiles["LII"].residues
+
+
+def test_plip_confirms_the_shared_glu30_anchor(plip_profiles):
+    """Both antifolates carry the 2,4-diaminopyrimidine head that pairs with
+    Glu30, so the anchor must appear in both profiles."""
+    for ligand in ("MOT", "LII"):
+        assert "GLU30" in plip_profiles[ligand].residues
+        assert plip_profiles[ligand].counts.get("salt_bridge", 0) >= 1
+
+
+def test_plip_finds_interaction_classes_this_pipeline_cannot(plip_profiles):
+    """Asserted rather than mentioned, so the blind spot cannot quietly close.
+
+    Waters are stripped before contact detection, so a water bridge is
+    invisible in principle; pi-stacking has no geometric rule at all.
+    """
+    from plinter import validation
+
+    for ligand in ("MOT", "LII"):
+        counts = plip_profiles[ligand].counts
+        unmodelled = [n for n in validation.UNMODELLED_BY_US if n in counts]
+        assert "pi_stacking" in unmodelled
+        assert "water_bridge" in unmodelled
+
+
+def test_plip_reports_fewer_residues_than_a_distance_cutoff(plip_profiles, fingerprints):
+    """The two methods answer different questions and must not be conflated.
+
+    This pipeline reports every heavy-atom contact within 5 A; PLIP reports
+    only chemically typed interactions. PLIP's pocket is therefore a subset in
+    size, and quoting the two counts side by side as if they measured the same
+    thing would be wrong.
+    """
+    for target, fingerprint in zip(TARGETS, fingerprints, strict=True):
+        assert len(plip_profiles[target.ligand].residues) < len(fingerprint.residues)
