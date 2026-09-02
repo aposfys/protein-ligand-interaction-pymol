@@ -50,6 +50,44 @@ selecting instead the site whose residue list *mentions* the ligand returns the 
 in both of these entries, because adjacent ligands appear in each other's site lists. A test
 pins that distinction.
 
+## Independent profiling with PLIP
+
+The SITE records say *which residues* line the pocket; they say nothing about what kind of
+interaction each one makes. Those assignments come from this pipeline's own distance rules,
+so checking them needs a second implementation that types interactions from chemistry rather
+than from geometry alone.
+
+[PLIP](https://doi.org/10.1093/nar/gkab294) (Adasme et al., *Nucleic Acids Research* 2021)
+is that reference. It protonates the entry internally with OpenBabel, so unlike ProLIF it
+runs on a deposited X-ray file as-is — which matters here because neither structure carries
+explicit hydrogens, and `prolif_residues` refuses both by design.
+
+| | Residues with a typed interaction | H-bond | Hydrophobic | Salt bridge | π-stacking | Water bridge |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1HFR / MOT | 9 | 4 | 3 | 2 | 1 | 2 |
+| 1KMV / LII | 5 | 2 | 1 | 1 | 1 | 1 |
+
+**PLIP reproduces the discriminating result by an independent route.** Arg70 and Asn64 appear
+for MOT and neither appears for LII, and Glu30 anchors both — the same conclusion the contact
+analysis reaches, reached without its distance rules. A test asserts each of these rather than
+leaving them to be read off a table.
+
+**PLIP also finds two interaction classes this pipeline cannot see.**
+
+- **π-stacking** with Phe31 in both complexes. There is no geometric rule for ring-centroid
+  geometry in `contacts.py`, so these contacts are currently absorbed into the hydrophobic
+  and van der Waals counts.
+- **Water-mediated bridges**, two for MOT and one for LII. Waters are stripped before the
+  KD-tree is built, so a bridging water is invisible in principle rather than merely missed.
+
+Both are asserted by tests, so the blind spots cannot quietly close without the documentation
+changing with them.
+
+**The two residue counts are not comparable and are not presented as if they were.** This
+pipeline reports every heavy-atom contact within 5.0 Å — 21 and 18 residues. PLIP reports
+only chemically typed interactions — 9 and 5. A smaller number here is not disagreement; the
+two methods answer different questions, and a test pins the direction of the inequality.
+
 ## Design decisions
 
 Each of these is a place where a contact analysis can quietly go wrong:
