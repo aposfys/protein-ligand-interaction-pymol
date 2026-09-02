@@ -34,7 +34,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[dev,chemistry]"
+          pip install -e ".[dev,chemistry,plip]"
 
       - name: Run the analysis from a clean state
         run: |
@@ -66,6 +66,21 @@ jobs:
               if entry["recall_of_reference"] < 1.0:
                   sys.exit(f"{entry['reference']}: recall dropped to {entry['recall_of_reference']}")
 
+          # PLIP types interactions from perceived chemistry rather than from
+          # this pipeline's distance rules, so it is an independent check on the
+          # discriminating result: MOT's glutamate tail reaches Arg70 and LII's
+          # has no anion to pair with the guanidinium.
+          plip = {e["ligand"]: e for e in extras.get("plip", [])}
+          if not plip:
+              sys.exit("PLIP profile missing; the independent cross-check did not run")
+          if "ARG70" not in plip["MOT"]["residues"]:
+              sys.exit(f"PLIP no longer places Arg70 in the MOT site: {plip['MOT']['residues']}")
+          if "ARG70" in plip["LII"]["residues"]:
+              sys.exit(f"PLIP now places Arg70 in the LII site: {plip['LII']['residues']}")
+          for ligand in ("MOT", "LII"):
+              if "GLU30" not in plip[ligand]["residues"]:
+                  sys.exit(f"PLIP lost the Glu30 anchor for {ligand}")
+
           # The lipophilic analogue must remain the more lipophilic one.
           profiles = {p["ligand"]: p for p in extras["chemistry"]["profiles"]}
           if not profiles["LII"]["logp"] > profiles["MOT"]["logp"]:
@@ -74,6 +89,7 @@ jobs:
           print(f"MOT {by_ligand['MOT']['contacts']} contacts, "
                 f"LII {by_ligand['LII']['contacts']} contacts")
           print("shared H-bond partners:", sorted(shared))
+          print("PLIP cross-check: Arg70 for MOT only, Glu30 for both")
           print("analysis reproduced")
           PY
 

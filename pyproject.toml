@@ -23,7 +23,8 @@ dependencies = ["biopython>=1.80"]
 figures = ["matplotlib>=3.7"]
 chemistry = ["rdkit>=2023.9"]
 validation = ["prolif>=2.0", "MDAnalysis>=2.7"]
-dev = ["pytest>=7.0", "matplotlib>=3.7", "rdkit>=2023.9", "ruff>=0.6", "mypy>=1.11"]
+plip = ["plip>=2.3"]
+dev = ["pytest>=7.0", "matplotlib>=3.7", "rdkit>=2023.9", "plip>=2.3", "ruff>=0.6", "mypy>=1.11"]
 
 [project.scripts]
 plinter = "plinter.cli:main"

@@ -64,6 +64,48 @@
       "recall_of_reference": 1.0
     }
   ],
+  "plip": [
+    {
+      "pdb_id": "1HFR",
+      "ligand": "MOT",
+      "binding_site": "MOT:A:188",
+      "residues": [
+        "ARG70",
+        "ASN64",
+        "GLN35",
+        "GLU30",
+        "ILE60",
+        "ILE7",
+        "PHE31",
+        "PHE34",
+        "VAL8"
+      ],
+      "n_residues": 9,
+      "n_hydrogen_bond": 4,
+      "n_hydrophobic": 3,
+      "n_pi_stacking": 1,
+      "n_salt_bridge": 2,
+      "n_water_bridge": 2
+    },
+    {
+      "pdb_id": "1KMV",
+      "ligand": "LII",
+      "binding_site": "LII:A:201",
+      "residues": [
+        "GLU30",
+        "ILE7",
+        "PHE31",
+        "PHE34",
+        "THR136"
+      ],
+      "n_residues": 5,
+      "n_hydrogen_bond": 2,
+      "n_hydrophobic": 1,
+      "n_pi_stacking": 1,
+      "n_salt_bridge": 1,
+      "n_water_bridge": 1
+    }
+  ],
   "chemistry": {
     "profiles": [
       {

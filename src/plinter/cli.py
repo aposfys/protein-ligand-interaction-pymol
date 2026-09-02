@@ -128,6 +128,40 @@ def main(argv: list[str] | None = None) -> int:
         extras["validation"] = agreements
         write_rows_csv(agreements, args.results_dir / "validation.csv")
 
+        print("\n## Independent profiling with PLIP\n")
+        plip_rows = []
+        for target in TARGETS:
+            try:
+                profile = validation.plip_interactions(
+                    args.data_dir / target.filename, target.ligand
+                )
+            except ImportError:
+                print("PLIP is not installed; skipping (pip install plip)")
+                break
+            except ValueError as error:
+                print(f"{target.pdb_id}: {error}")
+                continue
+            plip_rows.append({"pdb_id": target.pdb_id, **profile.as_dict()})
+            typed = ", ".join(
+                f"{name.replace('_', ' ')} {count}"
+                for name, count in sorted(profile.counts.items())
+            )
+            print(
+                f"**{target.pdb_id} / {target.ligand}** — "
+                f"{len(profile.residues)} residues carrying a typed interaction: {typed}"
+            )
+            print(f"- {', '.join(sorted(profile.residues))}")
+            blind = [name for name in validation.UNMODELLED_BY_US if name in profile.counts]
+            if blind:
+                print(
+                    "- classes this pipeline does not model: "
+                    + ", ".join(name.replace("_", " ") for name in blind)
+                )
+            print()
+        if plip_rows:
+            extras["plip"] = plip_rows
+            write_rows_csv(plip_rows, args.results_dir / "plip_interactions.csv")
+
     if not args.no_chemistry:
         print("\n## Ligand physicochemical profile\n")
         profiles = [chemistry.profile(target.ligand, args.data_dir) for target in TARGETS]
