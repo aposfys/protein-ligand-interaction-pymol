@@ -38,9 +38,13 @@ jobs:
           cache: pip
 
       - name: Install
+        # The locked set, not the newest one. A published result must not change
+        # because a dependency shipped overnight; the drift job below is what
+        # notices that it did.
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[dev,chemistry,plip]"
+          pip install -r requirements-lock.txt
+          pip install -e . --no-deps
 
       - name: Run the analysis from a clean state
         run: |
@@ -106,3 +110,68 @@ jobs:
           name: pipeline-results
           path: ci-results/
           retention-days: 7
+
+  drift:
+    name: Dependency drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # Never fails the workflow. The analysis job proves the result still holds
+    # on the locked set; this one reports, in the run summary, which upstream
+    # releases the lock is currently holding back.
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Resolve the newest compatible set
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev,chemistry,plip]"
+
+      - name: Report what moved
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import re, subprocess
+          from pathlib import Path
+
+          def norm(name):
+              return re.sub(r"[-_.]+", "-", name).lower()
+
+          def parse(lines):
+              out = {}
+              for line in lines:
+                  line = line.strip()
+                  if line and not line.startswith("#") and "==" in line:
+                      name, version = line.split("==", 1)
+                      out[norm(name)] = version
+              return out
+
+          locked = parse(Path("requirements-lock.txt").read_text().splitlines())
+          frozen = subprocess.run(
+              ["pip", "freeze", "--exclude-editable"],
+              capture_output=True, text=True, check=True,
+          ).stdout.splitlines()
+          latest = parse(frozen)
+
+          moved = [(n, locked[n], latest[n]) for n in sorted(locked)
+                   if n in latest and locked[n] != latest[n]]
+          added = sorted(set(latest) - set(locked))
+
+          if not moved and not added:
+              print("Lock matches the newest resolvable set.")
+          else:
+              print("### Newer than the lock\n")
+              print("| package | locked | latest |")
+              print("|---|---|---|")
+              for name, was, now in moved:
+                  print(f"| {name} | {was} | {now} |")
+              for name in added:
+                  print(f"| {name} | absent | {latest[name]} |")
+              print("\nRegenerate the lock once the analysis is confirmed to still hold.")
+          PY
