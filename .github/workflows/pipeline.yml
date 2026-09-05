@@ -23,6 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # Python buffers stdout when it is not a TTY, so a hard crash discards
+    # every progress line the CLI printed. Flush as we go so the log shows
+    # where a run died.
+    env:
+      PYTHONUNBUFFERED: "1"
+
     steps:
       - uses: actions/checkout@v4
 
