@@ -261,6 +261,18 @@ def plip_interactions(pdb: Path, ligand: str) -> PlipProfile:
     Raises:
         ValueError: if no PLIP binding site corresponds to the ligand.
     """
+    # RDKit and OpenBabel each bundle their own InChI library under the same
+    # symbol names, and OpenBabel loads its plugins into the process-wide
+    # namespace. On Linux, whichever is imported first owns those symbols, so
+    # importing RDKit after PLIP segfaults inside the chemistry step. Loading
+    # RDKit first keeps it bound to its own copy; the test suite passes only
+    # because it happens to import RDKit before PLIP.
+    import importlib.util
+
+    if importlib.util.find_spec("rdkit") is not None:
+        import rdkit.Chem
+        import rdkit.Chem.Descriptors  # noqa: F401
+
     from plip.structure.preparation import PDBComplex
 
     complex_ = PDBComplex()
