@@ -20,8 +20,9 @@ CONTACT_CUTOFF = 5.0
 HBOND_CUTOFF = 3.5
 # Carbon-carbon distance below which a contact is called hydrophobic.
 HYDROPHOBIC_CUTOFF = 4.5
-# Charged-group distance below which a polar contact is also called a salt bridge.
-SALT_BRIDGE_CUTOFF = 4.0
+# A hydrogen bond whose protein atom is a formally charged side-chain N or O is
+# labelled a salt bridge, so salt bridges share HBOND_CUTOFF and are a subset of
+# the hydrogen bonds. Every count is of atom pairs, not of residue pairs.
 
 # Elements able to donate or accept a hydrogen bond. Hydrogens are absent from
 # most X-ray depositions, so donor/acceptor identity is inferred from element.
@@ -123,7 +124,7 @@ def _classify(
     if both_polar and distance <= HBOND_CUTOFF:
         partner_key = (partner_residue, partner_atom.get_name())
         charged_partner = partner_key in CATIONIC_ATOMS or partner_key in ANIONIC_ATOMS
-        if charged_partner and distance <= SALT_BRIDGE_CUTOFF:
+        if charged_partner:
             return "salt bridge", True
         return "hydrogen bond", True
 

@@ -1,6 +1,7 @@
 # Method
 
-1. **Retrieve** both entries from RCSB (cached in `data/pdb/`).
+1. **Retrieve** both entries from RCSB (cached in `data/pdb/`). Connection resets, timeouts
+   and HTTP 5xx responses are retried up to three times with a growing wait.
 2. **Define the environment.** Waters, the NADPH cofactor and crystallisation additives are
    removed. Every remaining heavy atom is indexed in a KD-tree.
 3. **Find contacts.** For each ligand heavy atom, `Bio.PDB.NeighborSearch` returns all
@@ -10,10 +11,14 @@
 
    | Interaction | Criterion |
    | --- | --- |
-   | Salt bridge | N/O ↔ formally charged side-chain N/O, ≤ 4.0 Å |
    | Hydrogen bond | N/O ↔ N/O, ≤ 3.5 Å |
+   | Salt bridge | a hydrogen bond whose protein atom is a formally charged side-chain N/O |
    | Hydrophobic | C ↔ C, ≤ 4.5 Å |
    | van der Waals | any other pair ≤ 5.0 Å |
+
+   Salt bridges are therefore a subset of the hydrogen bonds, and every count is of atom
+   pairs. One arginine can contribute several salt-bridge pairs where PLIP counts one salt
+   bridge.
 
 5. **Compare** the two fingerprints: shared residues, shared hydrogen-bond partners, and
    residues unique to each ligand.
@@ -33,33 +38,39 @@ observation into a mechanistic one:
 | **Carboxylic acids** | **2** | **0** |
 | Primary aromatic amines | 2 | 2 |
 
-The decisive rows are the last two. Both ligands carry the 2,4-diaminopyrimidine head group
-— the two primary aromatic amines that hydrogen-bond to Glu30 — which is why both are
-anchored identically. But MOT's L-glutamate tail contributes two carboxylates, ionised at
+The decisive rows are the last two. Both ligands carry the 2,4-diaminopyrimidine head group,
+whose two primary aromatic amines hydrogen-bond to Glu30, which is why both are anchored
+identically. But MOT's L-glutamate tail contributes two carboxylates, ionised at
 physiological pH, and LII has none. That is the physical reason LII cannot reach Arg70.
 
-## Validation against the depositors' annotation
+## Consistency with the SITE records
 
-| | Annotated residues | Recovered | Additional |
+| | SITE residues | Recovered | Additional |
 | --- | ---: | ---: | ---: |
-| 1HFR / MOT | 14 | **14 (100%)** | 7 |
-| 1KMV / LII | 10 | **10 (100%)** | 8 |
+| 1HFR / MOT | 14 | 14 (100%) | 7 |
+| 1KMV / LII | 10 | 10 (100%) | 8 |
 
-Linking a SITE record to its ligand requires the `REMARK 800 SITE_DESCRIPTION` line:
-selecting instead the site whose residue list *mentions* the ligand returns the NADPH pocket
+These SITE records are not the depositors' annotation. REMARK 800 in both entries gives
+`EVIDENCE_CODE: SOFTWARE`, so the wwPDB generated them from the coordinates, and a 3.70 Å
+heavy-atom cutoff reproduces both sets exactly (a test asserts this). Full recall at 5.0 Å
+is therefore expected by construction. The comparison checks that the parsing, the ligand
+selection and the residue naming are right. It is not independent evidence about the pocket.
+
+Linking a SITE record to its ligand requires the `REMARK 800 SITE_DESCRIPTION` line.
+Selecting instead the site whose residue list *mentions* the ligand returns the NADPH pocket
 in both of these entries, because adjacent ligands appear in each other's site lists. A test
 pins that distinction.
 
 ## Independent profiling with PLIP
 
-The SITE records say *which residues* line the pocket; they say nothing about what kind of
-interaction each one makes. Those assignments come from this pipeline's own distance rules,
-so checking them needs a second implementation that types interactions from chemistry rather
-than from geometry alone.
+The SITE records are themselves a distance cutoff and say nothing about what kind of
+interaction each residue makes. Those assignments come from this pipeline's own distance
+rules, so checking them needs a second implementation that types interactions from chemistry
+rather than from geometry alone.
 
 [PLIP](https://doi.org/10.1093/nar/gkab294) (Adasme et al., *Nucleic Acids Research* 2021)
 is that reference. It protonates the entry internally with OpenBabel, so unlike ProLIF it
-runs on a deposited X-ray file as-is — which matters here because neither structure carries
+runs on a deposited X-ray file as-is. That matters here because neither structure carries
 explicit hydrogens, and `prolif_residues` refuses both by design.
 
 | | Residues with a typed interaction | H-bond | Hydrophobic | Salt bridge | π-stacking | Water bridge |
@@ -68,15 +79,17 @@ explicit hydrogens, and `prolif_residues` refuses both by design.
 | 1KMV / LII | 5 | 2 | 1 | 1 | 1 | 1 |
 
 **PLIP reproduces the discriminating result by an independent route.** Arg70 and Asn64 appear
-for MOT and neither appears for LII, and Glu30 anchors both — the same conclusion the contact
-analysis reaches, reached without its distance rules. A test asserts each of these rather than
+for MOT and neither appears for LII, and Glu30 anchors both. The contact analysis reaches the
+same conclusion, and PLIP reaches it without those distance rules. A test asserts each of these rather than
 leaving them to be read off a table.
 
 **PLIP also finds two interaction classes this pipeline cannot see.**
 
-- **π-stacking** with Phe31 in both complexes. There is no geometric rule for ring-centroid
-  geometry in `contacts.py`, so these contacts are currently absorbed into the hydrophobic
-  and van der Waals counts.
+- **π-stacking**, one per complex, on a different residue in each. MOT's benzoyl ring stacks
+  T-shaped against Phe34 and LII's ring stacks parallel against Phe31 (the
+  `pi_stacking_residues` column of `plip_interactions.csv`). There is no rule for
+  ring-centroid geometry in `contacts.py`, so these contacts are absorbed into the
+  hydrophobic and van der Waals counts.
 - **Water-mediated bridges**, two for MOT and one for LII. Waters are stripped before the
   KD-tree is built, so a bridging water is invisible in principle rather than merely missed.
 
@@ -84,9 +97,10 @@ Both are asserted by tests, so the blind spots cannot quietly close without the 
 changing with them.
 
 **The two residue counts are not comparable and are not presented as if they were.** This
-pipeline reports every heavy-atom contact within 5.0 Å — 21 and 18 residues. PLIP reports
-only chemically typed interactions — 9 and 5. A smaller number here is not disagreement; the
-two methods answer different questions, and a test pins the direction of the inequality.
+pipeline reports every heavy-atom contact within 5.0 Å, which gives 21 and 18 residues. PLIP
+reports only chemically typed interactions, which gives 9 and 5. A smaller number here is not
+disagreement. The two methods answer different questions, and a test pins the direction of
+the inequality.
 
 ## Design decisions
 
@@ -106,11 +120,13 @@ Each of these is a place where a contact analysis can quietly go wrong:
   makes the two binding modes distinguishable; a boolean H-bond flag cannot express it.
 - **Descriptors come from curated SMILES, not from coordinates.** Bond orders and
   protonation inferred from a 2.10 Å electron-density model would be guesses.
-- **The pocket is checked against an external reference.** A geometric analysis that agrees
-  with nobody is hard to trust.
-- **Everything regenerates from source.** 19 tests assert the invariants — cutoffs
-  respected, cofactor and solvent excluded, the conserved Glu30 anchor recovered, and full
-  recall of the annotated binding site.
+- **The discriminating residues are checked by a second method.** PLIP types interactions
+  from chemistry rather than from these distance rules. The SITE records are only a
+  consistency check, because they are a cutoff pocket themselves.
+- **Everything regenerates from source.** The pytest suite asserts the invariants. Cutoffs
+  are respected, cofactor and solvent are excluded, the conserved Glu30 anchor is recovered,
+  PLIP's findings hold, and downloads retry transient network errors without touching the
+  network in the tests.
 
 ## CLI
 
@@ -118,7 +134,7 @@ Each of these is a place where a contact analysis can quietly go wrong:
 python -m plinter.cli --cutoff 4.5 --results-dir results/strict
 python -m plinter.cli --keep-cofactor    # include NADPH in the environment
 python -m plinter.cli --no-chemistry     # skip RDKit descriptors
-python -m plinter.cli --no-validation    # skip the SITE-record comparison
+python -m plinter.cli --no-validation    # skip the SITE-record and PLIP comparisons
 ```
 
 ## Repository layout
@@ -128,8 +144,9 @@ src/plinter/
   contacts.py     KD-tree contact detection and interaction classification
   compare.py      Binding-site fingerprints and their intersection
   structures.py   RCSB retrieval and PDB parsing
+  download.py     HTTP retrieval with retry and backoff
   chemistry.py    RDKit descriptors from the PDB Chemical Component Dictionary
-  validation.py   SITE-record and ProLIF cross-checks
+  validation.py   SITE-record, PLIP and optional ProLIF comparisons
   report.py       CSV / JSON / Markdown output
   plots.py        Matplotlib figures
   cli.py          Command-line entry point
@@ -148,7 +165,8 @@ results/          Generated tables and figures
 | `results/residue_comparison.csv` | One row per pocket residue, both ligands' closest approach |
 | `results/summary.json` | Per-ligand counts and the shared/unique residue partition |
 | `results/ligand_properties.csv` | RDKit descriptors and functional-group counts |
-| `results/validation.csv` | Agreement with the depositors' SITE records |
+| `results/validation.csv` | Overlap with the entries' SITE records |
+| `results/plip_interactions.csv` | PLIP's typed interactions per ligand, including the π-stacking partner |
 | `results/extras.json` | Chemistry and validation, machine-readable |
 | `results/figures/` | PyMOL renders of each site and the superposition |
 
