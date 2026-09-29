@@ -175,7 +175,11 @@ def test_missing_ligand_site_returns_empty():
 
 
 def test_pipeline_recovers_every_annotated_residue(fingerprints):
-    """No false negatives against the depositors' own annotation."""
+    """No false negatives against the SITE records.
+
+    The records are wwPDB software-generated and match a 3.70 A cutoff pocket,
+    so this is a consistency check on parsing and residue naming rather than
+    independent evidence."""
     from plinter import validation
 
     for target, fingerprint in zip(TARGETS, fingerprints, strict=True):
@@ -186,6 +190,27 @@ def test_pipeline_recovers_every_annotated_residue(fingerprints):
         )
         assert agreement.recall_of_reference == 1.0
         assert not agreement.only_theirs
+
+
+def test_site_records_are_software_generated_cutoff_pockets():
+    """Why full recall at 5.0 A is expected rather than informative.
+
+    Both entries mark their sites EVIDENCE_CODE SOFTWARE, and a 3.70 A cutoff
+    reproduces each SITE set exactly."""
+    from plinter import validation
+
+    for target in TARGETS:
+        path = DATA_DIR / target.filename
+        assert "REMARK 800 EVIDENCE_CODE: SOFTWARE" in path.read_text(encoding="utf-8")
+        contacts = find_contacts(
+            load_structure(path),
+            ligand_resname=target.ligand,
+            exclude_resnames=(COFACTOR,),
+            cutoff=3.70,
+        )
+        assert set(contacting_residues(contacts)) == validation.site_record_residues(
+            path, target.ligand
+        )
 
 
 def test_prolif_refuses_unprotonated_structures():

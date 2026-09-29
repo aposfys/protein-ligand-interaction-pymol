@@ -98,8 +98,9 @@ def render_overlay():
         load_complex(entry["pdb_id"])
 
     reference, mobile = COMPLEXES[0]["pdb_id"], COMPLEXES[1]["pdb_id"]
-    rms = cmd.align(f"{mobile} and polymer", f"{reference} and polymer")[0]
-    print(f"Cα alignment RMSD {reference} vs {mobile}: {rms:.2f} A")
+    # All polymer atoms, after PyMOL's default outlier rejection. Not a C-alpha RMSD.
+    rms, aligned = cmd.align(f"{mobile} and polymer", f"{reference} and polymer")[:2]
+    print(f"align RMSD {reference} vs {mobile}: {rms:.2f} A over {aligned} polymer atoms")
 
     cmd.hide("everything")
     cmd.show("cartoon", f"{reference} and polymer")

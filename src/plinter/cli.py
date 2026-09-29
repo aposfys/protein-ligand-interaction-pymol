@@ -63,7 +63,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--no-validation",
         action="store_true",
-        help="Skip the comparison against the depositors' SITE records.",
+        help="Skip the SITE-record and PLIP comparisons.",
     )
     return parser.parse_args(argv)
 
@@ -108,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
     extras: dict[str, object] = {}
 
     if not args.no_validation:
-        print("\n## Validation against the depositors' annotation\n")
+        print("\n## Consistency with the SITE records\n")
         agreements = []
         for target, fingerprint in zip(TARGETS, fingerprints, strict=True):
             reference = validation.site_record_residues(
