@@ -121,9 +121,10 @@ def test_missing_ligand_raises():
 def ligand_profiles():
     from plinter import chemistry
 
-    cache = Path(__file__).resolve().parents[1] / "data"
     try:
-        return {target.ligand: chemistry.profile(target.ligand, cache) for target in TARGETS}
+        return {
+            target.ligand: chemistry.profile(target.ligand, DATA_DIR) for target in TARGETS
+        }
     except Exception as error:  # offline and uncached
         pytest.skip(f"chemical component data unavailable: {error}")
 
