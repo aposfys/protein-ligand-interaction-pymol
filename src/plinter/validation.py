@@ -222,6 +222,9 @@ class PlipProfile:
     binding_site: str
     residues: frozenset[str]
     counts: dict[str, int]
+    # Which residue each ring stacks against. The residue list alone cannot say,
+    # because both Phe31 and Phe34 carry other typed interactions with MOT.
+    pi_stacking_residues: frozenset[str] = frozenset()
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -230,6 +233,7 @@ class PlipProfile:
             "residues": sorted(self.residues),
             "n_residues": len(self.residues),
             **{f"n_{name}": count for name, count in sorted(self.counts.items())},
+            "pi_stacking_residues": sorted(self.pi_stacking_residues),
         }
 
 
@@ -308,6 +312,7 @@ def plip_interactions(pdb: Path, ligand: str) -> PlipProfile:
             binding_site=site_key,
             residues=frozenset(residues),
             counts=counts,
+            pi_stacking_residues=frozenset(f"{i.restype}{i.resnr}" for i in site.pistacking),
         )
 
     raise ValueError(f"PLIP found no binding site for ligand {ligand!r} in {pdb.name}")

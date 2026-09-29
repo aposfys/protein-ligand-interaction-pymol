@@ -85,7 +85,10 @@
       "n_hydrophobic": 3,
       "n_pi_stacking": 1,
       "n_salt_bridge": 2,
-      "n_water_bridge": 2
+      "n_water_bridge": 2,
+      "pi_stacking_residues": [
+        "PHE34"
+      ]
     },
     {
       "pdb_id": "1KMV",
@@ -103,7 +106,10 @@
       "n_hydrophobic": 1,
       "n_pi_stacking": 1,
       "n_salt_bridge": 1,
-      "n_water_bridge": 1
+      "n_water_bridge": 1,
+      "pi_stacking_residues": [
+        "PHE31"
+      ]
     }
   ],
   "chemistry": {
