@@ -261,6 +261,14 @@ def test_plip_finds_interaction_classes_this_pipeline_cannot(plip_profiles):
         assert "water_bridge" in unmodelled
 
 
+def test_plip_places_each_pi_stack_on_a_different_phenylalanine(plip_profiles):
+    """MOT's benzoyl ring stacks edge-on against Phe34, LII's ring face-on
+    against Phe31. Both residues appear in both profiles, so the partner has to
+    be read from the stacking interaction itself."""
+    assert plip_profiles["MOT"].pi_stacking_residues == {"PHE34"}
+    assert plip_profiles["LII"].pi_stacking_residues == {"PHE31"}
+
+
 def test_plip_reports_fewer_residues_than_a_distance_cutoff(plip_profiles, fingerprints):
     """The two methods answer different questions and must not be conflated.
 
