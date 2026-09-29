@@ -13,9 +13,10 @@ orders and protonation are the curated ones rather than inferred from geometry.
 from __future__ import annotations
 
 import json
-import urllib.request
 from dataclasses import asdict, dataclass
 from pathlib import Path
+
+from .download import fetch
 
 CHEMCOMP_API = "https://data.rcsb.org/rest/v1/core/chemcomp/{ligand}"
 
@@ -65,10 +66,13 @@ def fetch_chemcomp(ligand: str, cache: Path) -> dict:
     if cache.exists() and cache.stat().st_size > 0:
         return json.loads(cache.read_text(encoding="utf-8"))
 
-    with urllib.request.urlopen(
-        CHEMCOMP_API.format(ligand=ligand.upper()), timeout=60
-    ) as response:
-        payload = response.read()
+    payload = fetch(
+        CHEMCOMP_API.format(ligand=ligand.upper()),
+        hint=(
+            "RCSB may be briefly unavailable. Rerun later, or place the record at "
+            f"{cache} to run offline."
+        ),
+    )
     cache.write_bytes(payload)
     return json.loads(payload)
 

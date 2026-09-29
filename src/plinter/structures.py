@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
 from Bio.PDB import PDBParser
 from Bio.PDB.Structure import Structure
+
+from .download import fetch
 
 RCSB_DOWNLOAD_URL = "https://files.rcsb.org/download/{pdb_id}.pdb"
 
@@ -45,8 +46,14 @@ def download_structure(pdb_id: str, destination: Path) -> Path:
         return destination
 
     url = RCSB_DOWNLOAD_URL.format(pdb_id=pdb_id.upper())
-    with urllib.request.urlopen(url, timeout=60) as response:
-        destination.write_bytes(response.read())
+    payload = fetch(
+        url,
+        hint=(
+            "RCSB may be briefly unavailable. Rerun later, or place the entry at "
+            f"{destination} to run offline."
+        ),
+    )
+    destination.write_bytes(payload)
     return destination
 
 
