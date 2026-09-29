@@ -11,6 +11,7 @@ on:
   push:
     paths:
       - "src/plinter/**"
+      - "requirements-lock.txt"
       - ".github/workflows/pipeline.yml"
 
 concurrency:
@@ -71,7 +72,8 @@ jobs:
           if "GLU30" not in shared:
               sys.exit(f"Glu30 is no longer a shared H-bond partner: {sorted(shared)}")
 
-          # Full recall against the depositors' annotation.
+          # Full recall of the SITE records. They are wwPDB-generated cutoff
+          # pockets, so this checks parsing and residue naming, not the biology.
           for entry in extras["validation"]:
               if entry["recall_of_reference"] < 1.0:
                   sys.exit(f"{entry['reference']}: recall dropped to {entry['recall_of_reference']}")
